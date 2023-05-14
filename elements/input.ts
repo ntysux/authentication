@@ -7,6 +7,7 @@ const black = definePartsStyle({
   field: {
     bg: 'app.black.1',
     color: 'app.black.2',
+    fontSize: 'sm',
     fontWeight: '700',
     borderRadius: '5',
     border: '2px',
