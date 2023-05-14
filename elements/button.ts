@@ -13,6 +13,13 @@ const out = defineStyle({
   }
 })
 
+const sol = defineStyle({
+  bg: 'app.black.1',
+  color: 'white',
+  borderRadius: '5',
+  fontSize: 'sm'
+})
+
 export const buttonTheme = defineStyleConfig({
-  variants: { out }
+  variants: {out, sol}
 })
