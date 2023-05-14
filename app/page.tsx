@@ -1,7 +1,6 @@
 'use client'
 
 import { Button, Card, CardBody, CardFooter, CardHeader, Flex, Heading, Input } from "@chakra-ui/react"
-import { IconArrowNarrowRight } from "@tabler/icons-react"
 
 export default function Auth() {
   return (
@@ -10,10 +9,10 @@ export default function Auth() {
       align='center'
       justify='center'
     >
-      <Card minW={{sm: 'md', base: 'auto'}} boxShadow='base'>
+      <Card minW={{sm: 'md', base: 'auto'}}>
         <CardHeader>
           <Heading
-            size='xs'
+            size='sm'
             fontFamily='Quicksand'
             color='app.black.2'
           >
@@ -22,16 +21,13 @@ export default function Auth() {
         </CardHeader>
         <CardBody pb='0'>
           <Input
+            size='lg'
             variant='black'
             placeholder='Tên đăng nhập'  
           />
         </CardBody>
         <CardFooter justify='right'>
-          <Button
-            size={{sm: 'md', base: 'sm'}}
-            variant='out'
-            rightIcon={<IconArrowNarrowRight size='20px' />} 
-          >
+          <Button variant='out'>
             Tiếp theo
           </Button>
         </CardFooter>
