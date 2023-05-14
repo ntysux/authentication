@@ -1,5 +1,6 @@
 'use client'
 
+import { inputTheme } from '@/elements/input'
 import { CacheProvider } from '@chakra-ui/next-js'
 import { ChakraProvider, extendTheme } from '@chakra-ui/react'
 
@@ -13,7 +14,7 @@ const theme = extendTheme({
     }
   },
   components: {
-    
+    Input: inputTheme
   }
 })
 
