@@ -13,6 +13,7 @@
     "@chakra-ui/react": "^2.6.1",
     "@emotion/react": "^11.11.0",
     "@emotion/styled": "^11.11.0",
+    "@notionhq/client": "^2.2.5",
     "@tabler/icons-react": "^2.18.0",
     "@types/node": "20.1.4",
     "@types/react": "18.2.6",
