@@ -41,7 +41,7 @@ export default function Auth() {
           <Button
             variant='out'
             as={Link}
-            href={`/complete/${username}`}
+            href={`/${username}`}
           >
             Tiếp theo
           </Button>
