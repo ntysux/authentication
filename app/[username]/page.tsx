@@ -1,99 +1,23 @@
-'use client'
+import Client from "./client"
+import { Client as NotionClient } from "@notionhq/client"
 
-import { Box, Button, Card, CardBody, CardFooter, CardHeader, Flex, Heading, Input, Stack, Text } from "@chakra-ui/react"
+const notion = new NotionClient({auth: process.env.NOTION_KEY})
+const databaseId = process.env.NOTION_DATABASE_ID
 
-export default function Complete() {
-  const x: boolean = true
+export default async function Page({params}: {params: {username: string}}) {
+  const {username} = params
 
-  return x ? (
-    <Flex
-      minH='100vh'
-      align='center'
-      justify='center'
-    >
-      <Card minW={{sm: 'md', base: 'auto'}}>
-        <CardHeader>
-          <Stack spacing='4'>
-            <Heading
-              fontFamily='Quicksand'
-              size='sm'
-              color='app.black.2'
-            >
-              Đăng nhập
-            </Heading>
-            <Box
-              color='rgba(104, 102, 107, 0.5)'
-              fontWeight='600'
-              fontSize='sm'
-            >
-              <Text>Tên tài khoản đã tồn tại</Text>
-              <Text>nhập mật khẩu để đăng nhập.</Text>
-            </Box>
-          </Stack>
-        </CardHeader>
-        <CardBody pb='0'>
-          <Input
-            type='password'
-            size='lg'
-            variant='black'
-            placeholder='Mật khẩu'
-          />
-        </CardBody>
-        <CardFooter justify='right'>
-          <Button variant='sol'>
-            Hoàn tất
-          </Button>
-        </CardFooter>
-      </Card>
-    </Flex>
-  ) : (
-    <Flex
-      minH='100vh'
-      align='center'
-      justify='center'
-    >
-      <Card minW={{sm: 'md', base: 'auto'}}>
-        <CardHeader>
-          <Stack spacing='4'>
-            <Heading
-              fontFamily='Quicksand'
-              size='sm'
-              color='app.black.2'
-            >
-              Đăng kí
-            </Heading>
-            <Box
-              color='rgba(104, 102, 107, 0.5)'
-              fontWeight='600'
-              fontSize='sm'
-            >
-              <Text>Tên tài khoản chưa tồn tại</Text>
-              <Text>đăng kí bằng cách nhập mật khẩu phía dưới.</Text>
-            </Box>
-          </Stack>
-        </CardHeader>
-        <CardBody pb='0'>
-          <Stack>
-            <Input
-              type='password'
-              size='lg'
-              variant='black'
-              placeholder='Mật khẩu'
-            />
-            <Input
-              type='password'
-              size='lg'
-              variant='black'
-              placeholder='Nhập lại mật khẩu'
-            />
-          </Stack>
-        </CardBody>
-        <CardFooter justify='right'>
-          <Button variant='sol'>
-            Hoàn tất
-          </Button>
-        </CardFooter>
-      </Card>
-    </Flex>
-  )
+  const response: any = await notion.databases.query({
+    database_id: databaseId!,
+    filter: {
+      property: 'username',
+      rich_text: {
+        contains: username
+      }
+    }
+  })
+
+  // console.log('res', response.results[0].properties.username.title[0].plain_text)
+
+  return <Client isUser={Boolean(response.results.length)} username={username} />
 }
