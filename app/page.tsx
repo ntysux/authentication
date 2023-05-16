@@ -1,8 +1,17 @@
 'use client'
 
 import { Button, Card, CardBody, CardFooter, CardHeader, Flex, Heading, Input } from "@chakra-ui/react"
+import Link from "next/link"
+import { ChangeEvent, useState } from "react"
 
 export default function Auth() {
+  const [username, setUsername] = useState<string>('')
+
+  function handleSetUsername(event: ChangeEvent<HTMLInputElement>) {
+    const value: string = event.target.value
+    setUsername(value.trim())
+  }
+
   return (
     <Flex
       minH='100vh'
@@ -21,13 +30,19 @@ export default function Auth() {
         </CardHeader>
         <CardBody pb='0'>
           <Input
+            value={username}
             size='lg'
             variant='black'
-            placeholder='Tên đăng nhập'  
+            placeholder='Tên đăng nhập'
+            onChange={e => handleSetUsername(e)}  
           />
         </CardBody>
         <CardFooter justify='right'>
-          <Button variant='out'>
+          <Button
+            variant='out'
+            as={Link}
+            href={`/complete/${username}`}
+          >
             Tiếp theo
           </Button>
         </CardFooter>
