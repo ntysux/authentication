@@ -11,6 +11,9 @@ const theme = extendTheme({
       black: {
         1: '#49474B',
         2: '#68666B'
+      },
+      error: {
+        1: '#FF677F'
       }
     }
   },
