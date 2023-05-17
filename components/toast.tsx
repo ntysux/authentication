@@ -11,7 +11,7 @@ export default function Toast() {
     >
       <Box
         p='1'
-        bg='#FF677F'
+        bg='app.error.1'
         rounded='full'
       />
       <Text fontSize='sm'>
