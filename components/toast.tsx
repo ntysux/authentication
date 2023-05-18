@@ -1,10 +1,11 @@
 import { Box, HStack, Text } from "@chakra-ui/react"
 
-export default function Toast() {
+export default function Toast({children}: {children: string}) {
   return (
     <HStack
-      spacing='3'
+      mb='2'
       p='3'
+      spacing='3'
       bg='app.black.1'
       color='white'
       borderRadius='8'
@@ -15,7 +16,7 @@ export default function Toast() {
         rounded='full'
       />
       <Text fontSize='sm'>
-        Mật khẩu không chính xác
+        {children}
       </Text>
     </HStack>
   )
