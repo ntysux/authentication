@@ -38,17 +38,23 @@ export default function Client({
 
   async function LogupValidate() {
     const validationSchema = object().shape({
-      password: string().required('Vui lòng nhập mật khẩu'),
-      passwordConfirm: string().required('Vui lòng xác thực mật khẩu')
-    })
+      password: string()
+        .required('Vui lòng nhập mật khẩu'),
+      passwordConfirm: string()
+        .required('Vui lòng xác thực mật khẩu')
+        .test('match', 'Mật khẩu không khớp', value => value === password)
+    }) 
 
     try {
-      const validData = await validationSchema.validate({password, passwordConfirm}, { abortEarly: false })
+      const validData = await validationSchema.validate(
+        {password, passwordConfirm}, 
+        {abortEarly: false, context: {password, passwordConfirm}}
+      )
     } catch (error: any) {
       toast({
         position: 'top',
         duration: 2000,
-        render: () => 
+        render: () =>  
           error.errors
           .reverse()
           .map((err: string, index: number) => 
