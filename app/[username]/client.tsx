@@ -20,7 +20,7 @@ export default function Client({
   const handleSetPassword = (event: ChangeEvent<HTMLInputElement>) => setPassword(event.target.value)
   const handleSetPasswordConfirm = (event: ChangeEvent<HTMLInputElement>) =>setPasswordConfirm(event.target.value)
 
-  async function LoginValidate() {
+  async function handleLoginValidate() {
     const validationSchema = string()
       .required('Vui lòng nhập mật khẩu')
       .test('match', 'Mật khẩu không chính xác', value => value === accountPassword)
@@ -36,7 +36,7 @@ export default function Client({
     }
   }
 
-  async function LogupValidate() {
+  async function handleLogupValidate() {
     const validationSchema = object().shape({
       password: string()
         .required('Vui lòng nhập mật khẩu'),
@@ -103,7 +103,7 @@ export default function Client({
           />
         </CardBody>
         <CardFooter justify='right'>
-          <Button variant='sol' onClick={LoginValidate}>
+          <Button variant='sol' onClick={handleLoginValidate}>
             Hoàn tất
           </Button>
         </CardFooter>
@@ -159,7 +159,7 @@ export default function Client({
           </Stack>
         </CardBody>
         <CardFooter justify='right'>
-          <Button variant='sol' onClick={LogupValidate}>
+          <Button variant='sol' onClick={handleLogupValidate}>
             Hoàn tất
           </Button>
         </CardFooter>
