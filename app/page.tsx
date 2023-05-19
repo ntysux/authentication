@@ -1,10 +1,11 @@
 'use client'
 
-import { Button, Card, CardBody, CardFooter, CardHeader, Flex, Heading, Input } from "@chakra-ui/react"
+import { Button, Card, CardBody, CardFooter, CardHeader, Flex, Heading, Input, useBoolean } from "@chakra-ui/react"
 import Link from "next/link"
 import { ChangeEvent, useState } from "react"
 
 export default function Auth() {
+  const [nextPage, setNextPage] = useBoolean(false)
   const [username, setUsername] = useState<string>('')
 
   function handleSetUsername(event: ChangeEvent<HTMLInputElement>) {
@@ -39,9 +40,11 @@ export default function Auth() {
         </CardBody>
         <CardFooter justify='right'>
           <Button
+            isLoading={nextPage}
             variant='out'
             as={Link}
             href={`/${username}`}
+            onClick={() => username ? setNextPage.on() : setNextPage.off()}
           >
             Tiếp theo
           </Button>
