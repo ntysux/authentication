@@ -21,12 +21,12 @@ export default function Client({
   const handleSetPasswordConfirm = (event: ChangeEvent<HTMLInputElement>) =>setPasswordConfirm(event.target.value)
 
   async function LoginValidate() {
-    const validationSchema = object().shape({
-      password: string().required('Vui lòng nhập mật khẩu')
-    })
+    const validationSchema = string()
+      .required('Vui lòng nhập mật khẩu')
+      .test('match', 'Mật khẩu không chính xác', value => value === accountPassword)
 
     try {
-      const validData = await validationSchema.validate({password})
+      const validData = await validationSchema.validate(password, {context: {password}})
     } catch (error: any) {
       toast({
         position: 'top',
@@ -54,8 +54,7 @@ export default function Client({
       toast({
         position: 'top',
         duration: 2000,
-        render: () =>  
-          error.errors
+        render: () => error.errors
           .reverse()
           .map((err: string, index: number) => 
             <Toast key={index}>{err}</Toast>
