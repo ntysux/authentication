@@ -1,9 +1,10 @@
 'use client'
 
-import { Box, Button, Card, CardBody, CardFooter, CardHeader, Flex, Heading, Input, Stack, Text, useToast } from "@chakra-ui/react"
-import { ChangeEvent, useState } from "react"
+import { AlertDialog, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Button, Card, CardBody, CardFooter, CardHeader, Divider, Flex, Heading, Input, Stack, Text, useBoolean, useDisclosure, useToast } from "@chakra-ui/react"
+import { ChangeEvent, useRef, useState } from "react"
 import { object, string } from 'yup'
 import Toast from "@/components/toast"
+import Link from "next/link"
 
 export default function Client({
   isUser,
@@ -12,6 +13,9 @@ export default function Client({
   isUser: boolean,
   account: {username: string, password: string}
 }) {
+  const [done, setDone] = useBoolean(false)
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const cancelRef = useRef(null)
   const toast = useToast()
   const {username, password: accountPassword} = account
   const [password, setPassword] = useState<string>('')
@@ -37,6 +41,7 @@ export default function Client({
   }
 
   async function handleLogupValidate() {
+    setDone.on()
     const validationSchema = object().shape({
       password: string()
         .required('Vui lòng nhập mật khẩu'),
@@ -61,9 +66,13 @@ export default function Client({
       })
 
       const {pageId} = await res.json()
-      
+      if (pageId) {
+        onOpen()
+        setDone.off()
+      }
       
     } catch (error: any) {
+      setDone.off()
       toast({
         position: 'top',
         duration: 2000,
@@ -172,9 +181,51 @@ export default function Client({
           </Stack>
         </CardBody>
         <CardFooter justify='right'>
-          <Button variant='sol' onClick={handleLogupValidate}>
+          <Button
+            isLoading={done}
+            variant='sol'
+            onClick={handleLogupValidate}
+          >
             Hoàn tất
           </Button>
+          <AlertDialog
+            leastDestructiveRef={cancelRef}
+            onClose={onClose}
+            isOpen={isOpen}
+            isCentered
+            closeOnOverlayClick={false}
+          >
+            <AlertDialogOverlay bg='rgba(73, 71, 75, 0.7)' />
+            <AlertDialogContent
+              w='fit-content'
+              color='white'
+              rounded='xl'
+              bg='rgba(53, 51, 55, 0.7)'
+              backdropFilter='blur(2px)'
+            >
+              <AlertDialogHeader
+                p='8'
+                fontSize='md'
+                fontWeight='300'
+                letterSpacing='wider'
+              >
+                Tạo tài khoản thành công
+              </AlertDialogHeader>
+              <Divider borderColor='whiteAlpha.300' />
+              <AlertDialogFooter p='2'>
+                <Button
+                  as={Link}
+                  href='/'
+                  replace
+                  size='sm'
+                  w='full'
+                  variant='un'
+                >
+                  Đăng nhập
+                </Button>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </CardFooter>
       </Card>
     </Flex>
