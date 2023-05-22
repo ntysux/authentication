@@ -12,8 +12,8 @@ export default function Client({
   isUser: boolean,
   account: {username: string, password: string}
 }) {
-  const {username: accountUsername, password: accountPassword} = account
   const toast = useToast()
+  const {username, password: accountPassword} = account
   const [password, setPassword] = useState<string>('')
   const [passwordConfirm, setPasswordConfirm] = useState<string>('')
 
@@ -46,10 +46,23 @@ export default function Client({
     }) 
 
     try {
-      const validData = await validationSchema.validate(
+      await validationSchema.validate(
         {password, passwordConfirm}, 
         {abortEarly: false, context: {password, passwordConfirm}}
       )
+      
+      // call API for create new account
+      const res = await fetch('http://localhost:3000/fadawd/api', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({username, password})
+      })
+
+      const {pageId} = await res.json()
+      
+      
     } catch (error: any) {
       toast({
         position: 'top',
@@ -86,7 +99,7 @@ export default function Client({
               fontSize='sm'
             >
               <Text>
-                Tên tài khoản <Text as='span' fontWeight='700' color='app.black.2'>{accountUsername}</Text> đã tồn tại
+                Tên tài khoản <Text as='span' fontWeight='700' color='app.black.2'>{username}</Text> đã tồn tại
               </Text>
               <Text>nhập mật khẩu để đăng nhập.</Text>
             </Box>
@@ -132,7 +145,7 @@ export default function Client({
               fontSize='sm'
             >
               <Text>
-                Tên tài khoản <Text as='span' fontWeight='700' color='app.black.2'>{accountUsername}</Text> chưa tồn tại
+                Tên tài khoản <Text as='span' fontWeight='700' color='app.black.2'>{username}</Text> chưa tồn tại
               </Text>
               <Text>đăng kí bằng cách nhập mật khẩu phía dưới.</Text>
             </Box>
