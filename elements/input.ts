@@ -5,7 +5,6 @@ const { definePartsStyle, defineMultiStyleConfig } = createMultiStyleConfigHelpe
 
 const black = definePartsStyle({
   field: {
-    bg: 'app.black.1',
     color: 'app.black.2',
     fontSize: 'sm',
     fontWeight: '700',
