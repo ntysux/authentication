@@ -43,7 +43,10 @@ export default function Auth() {
             isLoading={nextPage}
             variant='out'
             as={Link}
-            href={`/${username}`}
+            href={{
+              pathname: `/${username}`,
+              query: {timestamp: new Date().getTime()}
+            }}
             onClick={() => username ? setNextPage.on() : setNextPage.off()}
           >
             Tiếp theo
