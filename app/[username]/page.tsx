@@ -6,9 +6,8 @@ const databaseId = process.env.NOTION_DATABASE_ID
 
 export default async function Page({params}: {params: {username: string}}) {
   const {username} = params
-  let password
 
-  const response: any = await notion.databases.query({
+  const response = await notion.databases.query({
     database_id: databaseId!,
     filter: {
       property: 'username',
@@ -18,14 +17,5 @@ export default async function Page({params}: {params: {username: string}}) {
     }
   })
 
-  if (response.results.length) {
-    password = response.results[0].properties.password.rich_text[0].plain_text
-  } else {
-    password = null
-  }
-
-  // console.log('res', response.results[0].properties.password.rich_text[0].plain_text)
-
-  return <Client isUser={Boolean(response.results.length)} account={{username, password}}
-  />
+  return <Client isUser={Boolean(response.results.length)} username={username} />
 }
