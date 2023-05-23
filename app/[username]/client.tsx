@@ -2,42 +2,72 @@
 
 import { AlertDialog, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Button, Card, CardBody, CardFooter, CardHeader, Divider, Flex, Heading, Input, Stack, Text, useBoolean, useDisclosure, useToast } from "@chakra-ui/react"
 import { ChangeEvent, useRef, useState } from "react"
-import { object, string } from 'yup'
+import { object, string, boolean } from 'yup'
 import Toast from "@/components/toast"
 import Link from "next/link"
 
 export default function Client({
-  isUser,
-  account
+  isUser, username
 }: {
-  isUser: boolean,
-  account: {username: string, password: string}
+  isUser: boolean, username: string
 }) {
+
   const [done, setDone] = useBoolean(false)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const cancelRef = useRef(null)
   const toast = useToast()
-  const {username, password: accountPassword} = account
   const [password, setPassword] = useState<string>('')
   const [passwordConfirm, setPasswordConfirm] = useState<string>('')
 
-  const handleSetPassword = (event: ChangeEvent<HTMLInputElement>) => setPassword(event.target.value)
-  const handleSetPasswordConfirm = (event: ChangeEvent<HTMLInputElement>) =>setPasswordConfirm(event.target.value)
+  const handleSetPassword = (event: ChangeEvent<HTMLInputElement>) => 
+    setPassword(event.target.value)
+
+  const handleSetPasswordConfirm = (event: ChangeEvent<HTMLInputElement>) => 
+    setPasswordConfirm(event.target.value)
 
   async function handleLoginValidate() {
-    const validationSchema = string()
-      .required('Vui lòng nhập mật khẩu')
-      .test('match', 'Mật khẩu không chính xác', value => value === accountPassword)
+    setDone.on()
+    const validationSchema1 = string().required('Vui lòng nhập mật khẩu')
 
     try {
-      const validData = await validationSchema.validate(password, {context: {password}})
+      const validData = await validationSchema1.validate(password)
+
+      // call API for check password
+      const res = await fetch(`http://localhost:3000/${username}/api`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({auth: true, username, password})
+      })
+
+      const {result, token} = await res.json()
+      console.log(token)
+
+      const validationSchema2 = boolean().test('match', 'Mật khẩu không đúng', value => value === true)
+  
+      try {
+        const validData = await validationSchema2.validate(result)
+        localStorage.setItem('token', token)
+
+      } catch (error: any) {
+        setDone.off()
+        toast({
+          position: 'top',
+          duration: 2000,
+          render: () => <Toast>{error.errors[0]}</Toast>
+        })
+      }
+
     } catch (error: any) {
+      setDone.off()
       toast({
         position: 'top',
         duration: 2000,
         render: () => <Toast>{error.errors[0]}</Toast>
       })
     }
+  
   }
 
   async function handleLogupValidate() {
@@ -57,12 +87,12 @@ export default function Client({
       )
       
       // call API for create new account
-      const res = await fetch('http://localhost:3000/fadawd/api', {
+      const res = await fetch(`http://localhost:3000/${username}/api`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({username, password})
+        body: JSON.stringify({auth: false, username, password})
       })
 
       const {pageId} = await res.json()
@@ -108,9 +138,8 @@ export default function Client({
               fontSize='sm'
             >
               <Text>
-                Tên tài khoản <Text as='span' fontWeight='700' color='app.black.2'>{username}</Text> đã tồn tại
+                Nhập mật khẩu cho tài khoản <Text as='span' fontWeight='700' color='app.black.2'>{username}</Text>
               </Text>
-              <Text>nhập mật khẩu để đăng nhập.</Text>
             </Box>
           </Stack>
         </CardHeader>
@@ -125,7 +154,11 @@ export default function Client({
           />
         </CardBody>
         <CardFooter justify='right'>
-          <Button variant='sol' onClick={handleLoginValidate}>
+          <Button 
+            isLoading={done}
+            variant='sol' 
+            onClick={handleLoginValidate}
+          >
             Hoàn tất
           </Button>
         </CardFooter>
