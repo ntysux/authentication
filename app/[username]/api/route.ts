@@ -54,6 +54,7 @@ export async function POST(request: NextRequest) {
 
   } else { // is Login
 
+    // check user in Notion
     const response: any = await notion.databases.query({
       database_id: databaseId!,
       filter: {
@@ -70,8 +71,8 @@ export async function POST(request: NextRequest) {
     // match plain text password with account password
     const result: boolean = await compare(password, passwordHashed)
 
-    if (result) {
-      const token = jwt.sign({id: response.results[0].id}, 'app')
+    if (result) { // return Token if password match
+      const token = jwt.sign({id: response.results[0].id, username}, 'app')
 
       return NextResponse.json({result, token})
     } else {
