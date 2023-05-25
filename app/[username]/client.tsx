@@ -2,7 +2,7 @@
 
 import { AlertDialog, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Button, Card, CardBody, CardFooter, CardHeader, Divider, Flex, Heading, Input, Stack, Text, useBoolean, useDisclosure, useToast } from "@chakra-ui/react"
 import { ChangeEvent, useRef, useState } from "react"
-import { object, string, boolean } from 'yup'
+import { string, boolean } from 'yup'
 import Toast from "@/components/toast"
 import Link from "next/link"
 
@@ -12,77 +12,58 @@ export default function Client({
   isUser: boolean, username: string
 }) {
 
-  const [done, setDone] = useBoolean(false)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const cancelRef = useRef(null)
   const toast = useToast()
+  const [loading, setLoading] = useBoolean(false)
   const [password, setPassword] = useState<string>('')
   const [passwordConfirm, setPasswordConfirm] = useState<string>('')
 
+  // set Password
   const handleSetPassword = (event: ChangeEvent<HTMLInputElement>) => 
     setPassword(event.target.value)
 
+  // set Password Confirm
   const handleSetPasswordConfirm = (event: ChangeEvent<HTMLInputElement>) => 
     setPasswordConfirm(event.target.value)
 
   async function handleLoginValidate() {
-    setDone.on()
-    const validationSchema1 = string().required('Vui lòng nhập mật khẩu')
+    setLoading.on()
 
+    // call API for check password
+    const res = await fetch(`http://localhost:3000/${username}/api`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({auth: true, username, password})
+    })
+    
+    const {result, token} = await res.json()
+    
+    const validationSchema = boolean().test('match', 'Mật khẩu không đúng', value => value === true)
+    
     try {
-      const validData = await validationSchema1.validate(password)
-
-      // call API for check password
-      const res = await fetch(`http://localhost:3000/${username}/api`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({auth: true, username, password})
-      })
-
-      const {result, token} = await res.json()
-      console.log(token)
-
-      const validationSchema2 = boolean().test('match', 'Mật khẩu không đúng', value => value === true)
-  
-      try {
-        const validData = await validationSchema2.validate(result)
-        localStorage.setItem('token', token)
-
-      } catch (error: any) {
-        setDone.off()
-        toast({
-          position: 'top',
-          duration: 2000,
-          render: () => <Toast>{error.errors[0]}</Toast>
-        })
-      }
-
+      await validationSchema.validate(result)
+      localStorage.setItem('token', token)
     } catch (error: any) {
-      setDone.off()
+      setLoading.off()
       toast({
         position: 'top',
         duration: 2000,
         render: () => <Toast>{error.errors[0]}</Toast>
       })
     }
-  
   }
 
   async function handleLogupValidate() {
-    setDone.on()
-    const validationSchema = object().shape({
-      password: string()
-        .required('Vui lòng nhập mật khẩu'),
-      passwordConfirm: string()
-        .required('Vui lòng xác thực mật khẩu')
-        .test('match', 'Mật khẩu không khớp', value => value === password)
-    }) 
+    setLoading.on()
+
+    const validationSchema = string().test('match', 'Mật khẩu không khớp', value => value === password)
 
     try {
       await validationSchema.validate(
-        {password, passwordConfirm}, 
+        passwordConfirm,
         {abortEarly: false, context: {password, passwordConfirm}}
       )
       
@@ -96,21 +77,19 @@ export default function Client({
       })
 
       const {pageId} = await res.json()
+      
+      // open dialog back to login if pageId is ready
       if (pageId) {
         onOpen()
-        setDone.off()
+        setLoading.off()
       }
       
     } catch (error: any) {
-      setDone.off()
+      setLoading.off()
       toast({
         position: 'top',
         duration: 2000,
-        render: () => error.errors
-          .reverse()
-          .map((err: string, index: number) => 
-            <Toast key={index}>{err}</Toast>
-          )
+        render: () => <Toast>{error.errors[0]}</Toast>
       })
     }
   }
@@ -154,9 +133,10 @@ export default function Client({
           />
         </CardBody>
         <CardFooter justify='right'>
-          <Button 
-            isLoading={done}
-            variant='sol' 
+          <Button
+            isDisabled={!Boolean(password)}
+            isLoading={loading}
+            variant='unBl' 
             onClick={handleLoginValidate}
           >
             Hoàn tất
@@ -189,7 +169,7 @@ export default function Client({
               <Text>
                 Tên tài khoản <Text as='span' fontWeight='700' color='app.black.2'>{username}</Text> chưa tồn tại
               </Text>
-              <Text>đăng kí bằng cách nhập mật khẩu phía dưới.</Text>
+              <Text>nhập mật khẩu phía dưới để đăng kí tài khoản mới.</Text>
             </Box>
           </Stack>
         </CardHeader>
@@ -215,8 +195,9 @@ export default function Client({
         </CardBody>
         <CardFooter justify='right'>
           <Button
-            isLoading={done}
-            variant='sol'
+            isDisabled={!Boolean(password) || !Boolean(passwordConfirm)}
+            isLoading={loading}
+            variant='unBl'
             onClick={handleLogupValidate}
           >
             Hoàn tất
