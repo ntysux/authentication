@@ -1,7 +1,7 @@
 'use client'
 
 import { AlertDialog, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Button, Card, CardBody, CardFooter, CardHeader, Divider, Flex, Heading, Input, Stack, Text, useBoolean, useDisclosure, useToast } from "@chakra-ui/react"
-import { ChangeEvent, KeyboardEvent, useRef, useState } from "react"
+import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from "react"
 import { string, boolean } from 'yup'
 import Toast from "@/components/toast"
 import Link from "next/link"
@@ -18,6 +18,13 @@ export default function Client({
   const [loading, setLoading] = useBoolean(false)
   const [password, setPassword] = useState<string>('')
   const [passwordConfirm, setPasswordConfirm] = useState<string>('')
+  const passwordInputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    if (passwordInputRef.current) {
+      passwordInputRef.current.focus()
+    }
+  }, [])
 
   // set Password
   const handleSetPassword = (event: ChangeEvent<HTMLInputElement>) => 
@@ -136,6 +143,7 @@ export default function Client({
         </CardHeader>
         <CardBody pb='0'>
           <Input
+            ref={passwordInputRef}
             value={password}
             type='password'
             size='lg'
@@ -189,6 +197,7 @@ export default function Client({
         <CardBody pb='0'>
           <Stack>
             <Input
+              ref={passwordInputRef}
               value={password}
               type='password'
               size='lg'
