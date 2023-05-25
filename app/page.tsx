@@ -2,7 +2,7 @@
 
 import { Button, Card, CardBody, CardFooter, CardHeader, Flex, Heading, Input, useBoolean } from "@chakra-ui/react"
 import { useRouter } from "next/navigation"
-import { ChangeEvent, useState } from "react"
+import { ChangeEvent, KeyboardEvent, useState } from "react"
 
 export default function Auth() {
   const [loading, setLoading] = useBoolean(false)
@@ -16,6 +16,12 @@ export default function Auth() {
   async function handleNextPage() {
     router.push(`/${username}?timestamp=${new Date().getTime()}`)
     setLoading.on()
+  }
+
+  function handleKeyDown(event: KeyboardEvent<HTMLInputElement>) {
+    if(event.key === 'Enter' && username) {
+      handleNextPage()
+    }
   }
 
   return (
@@ -44,6 +50,7 @@ export default function Auth() {
             variant='black'
             placeholder='Tên đăng nhập'
             onChange={e => handleSetUsername(e)}
+            onKeyDown={e => handleKeyDown(e)}
           />
         </CardBody>
         <CardFooter justify='right'>

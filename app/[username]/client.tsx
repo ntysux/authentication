@@ -1,7 +1,7 @@
 'use client'
 
 import { AlertDialog, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Button, Card, CardBody, CardFooter, CardHeader, Divider, Flex, Heading, Input, Stack, Text, useBoolean, useDisclosure, useToast } from "@chakra-ui/react"
-import { ChangeEvent, useRef, useState } from "react"
+import { ChangeEvent, KeyboardEvent, useRef, useState } from "react"
 import { string, boolean } from 'yup'
 import Toast from "@/components/toast"
 import Link from "next/link"
@@ -26,6 +26,18 @@ export default function Client({
   // set Password Confirm
   const handleSetPasswordConfirm = (event: ChangeEvent<HTMLInputElement>) => 
     setPasswordConfirm(event.target.value)
+
+  function handleLoginKeyDown(event: KeyboardEvent<HTMLInputElement>) {
+    if(event.key === 'Enter' && password) {
+      handleLoginValidate()
+    }
+  }
+
+  function handleLogupKeyDown(event: KeyboardEvent<HTMLInputElement>) {
+    if(event.key === 'Enter' && password && passwordConfirm) {
+      handleLogupValidate()
+    }
+  }
 
   async function handleLoginValidate() {
     setLoading.on()
@@ -130,6 +142,7 @@ export default function Client({
             variant='black'
             placeholder='Mật khẩu'
             onChange={ e => handleSetPassword(e)}
+            onKeyDown={e => handleLoginKeyDown(e)}
           />
         </CardBody>
         <CardFooter justify='right'>
@@ -182,6 +195,7 @@ export default function Client({
               variant='black'
               placeholder='Mật khẩu'
               onChange={e => handleSetPassword(e)}
+              onKeyDown={e => handleLogupKeyDown(e)}
             />
             <Input
               value={passwordConfirm}
@@ -190,6 +204,7 @@ export default function Client({
               variant='black'
               placeholder='Nhập lại mật khẩu'
               onChange={e => handleSetPasswordConfirm(e)}
+              onKeyDown={e => handleLogupKeyDown(e)}
             />
           </Stack>
         </CardBody>
