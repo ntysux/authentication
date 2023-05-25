@@ -69,7 +69,7 @@ export default function Client({
     } catch (error: any) {
       setLoading.off()
       toast({
-        position: 'top',
+        position: 'bottom',
         duration: 2000,
         render: () => <Toast>{error.errors[0]}</Toast>
       })
@@ -107,7 +107,7 @@ export default function Client({
     } catch (error: any) {
       setLoading.off()
       toast({
-        position: 'top',
+        position: 'bottom',
         duration: 2000,
         render: () => <Toast>{error.errors[0]}</Toast>
       })
@@ -121,7 +121,7 @@ export default function Client({
       align='center'
       justify='center'
     >
-      <Card w={{xl: 'md', base: 'md'}}>
+      <Card w={{xl: 'md', base: 'md'}} mx='4'>
         <CardHeader>
           <Stack spacing='4'>
             <Heading
@@ -173,7 +173,7 @@ export default function Client({
       align='center'
       justify='center'
     >
-      <Card w={{xl: 'md', base: 'md'}}>
+      <Card w={{xl: 'md', base: 'md'}} mx='4'>
         <CardHeader>
           <Stack spacing='4'>
             <Heading
