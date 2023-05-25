@@ -19,6 +19,7 @@ export default function Client({
   const [password, setPassword] = useState<string>('')
   const [passwordConfirm, setPasswordConfirm] = useState<string>('')
   const passwordInputRef = useRef<HTMLInputElement>(null)
+  const url = process.env.NEXT_PUBLIC_APP_URL
 
   useEffect(() => {
     if (passwordInputRef.current) {
@@ -50,7 +51,7 @@ export default function Client({
     setLoading.on()
 
     // call API for check password
-    const res = await fetch(`http://localhost:3000/${username}/api`, {
+    const res = await fetch(`${url}/${username}/api`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -87,7 +88,7 @@ export default function Client({
       )
       
       // call API for create new account
-      const res = await fetch(`http://localhost:3000/${username}/api`, {
+      const res = await fetch(`${url}/${username}/api`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
