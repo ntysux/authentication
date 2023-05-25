@@ -1,16 +1,9 @@
 import { defineStyle, defineStyleConfig } from '@chakra-ui/react'
 
-const out = defineStyle({
-  border: '2px',
-  borderColor: 'app.black.1',
-  color: 'app.black.2',
+const unBl = defineStyle({
+  color: 'app.black.1',
   fontSize: 'sm',
   fontWeight: '700',
-  borderRadius: '5',
-  _hover: {
-    borderColor: 'app.black.1',
-    color: 'app.black.1',
-  },
   _loading: {
     cursor: 'default'
   }
@@ -19,21 +12,20 @@ const out = defineStyle({
 const sol = defineStyle({
   bg: 'app.black.1',
   color: 'white',
-  borderRadius: '5',
   fontSize: 'sm',
+  fontWeight: '700',
   _loading: {
     cursor: 'default',
-    opacity: '1',
     _hover: {
       bg: 'app.black.1'
     }
   }
 })
 
-const un = defineStyle({
+const unWh = defineStyle({
   color: 'white'
 }) 
 
 export const buttonTheme = defineStyleConfig({
-  variants: {out, sol, un}
+  variants: {unBl, sol, unWh}
 })
