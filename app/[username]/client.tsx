@@ -101,7 +101,7 @@ export default function Client({
       align='center'
       justify='center'
     >
-      <Card minW={{sm: 'md', base: 'auto'}}>
+      <Card w={{xl: 'md', base: 'md'}}>
         <CardHeader>
           <Stack spacing='4'>
             <Heading
@@ -151,7 +151,7 @@ export default function Client({
       align='center'
       justify='center'
     >
-      <Card minW={{sm: 'md', base: 'auto'}}>
+      <Card w={{xl: 'md', base: 'md'}}>
         <CardHeader>
           <Stack spacing='4'>
             <Heading
