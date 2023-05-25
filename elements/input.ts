@@ -6,9 +6,10 @@ const { definePartsStyle, defineMultiStyleConfig } = createMultiStyleConfigHelpe
 const black = definePartsStyle({
   field: {
     color: 'app.black.2',
+    bg: 'rgba(73, 71, 75, 0.1)',
     fontSize: 'sm',
     fontWeight: '700',
-    borderRadius: '5',
+    rounded: 'lg',
     border: '2px',
     borderColor: 'app.black.1',
     _placeholder: {
