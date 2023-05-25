@@ -6,19 +6,9 @@ const unBl = defineStyle({
   fontWeight: '700',
   _loading: {
     cursor: 'default'
-  }
-})
-
-const sol = defineStyle({
-  bg: 'app.black.1',
-  color: 'white',
-  fontSize: 'sm',
-  fontWeight: '700',
-  _loading: {
-    cursor: 'default',
-    _hover: {
-      bg: 'app.black.1'
-    }
+  },
+  _disabled: {
+    cursor: 'default'
   }
 })
 
@@ -27,5 +17,5 @@ const unWh = defineStyle({
 }) 
 
 export const buttonTheme = defineStyleConfig({
-  variants: {unBl, sol, unWh}
+  variants: {unBl, unWh}
 })
