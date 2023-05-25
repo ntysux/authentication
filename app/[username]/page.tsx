@@ -7,6 +7,7 @@ const databaseId = process.env.NOTION_DATABASE_ID
 export default async function Page({params}: {params: {username: string}}) {
   const {username} = params
 
+  // check user in Notion
   const response = await notion.databases.query({
     database_id: databaseId!,
     filter: {
