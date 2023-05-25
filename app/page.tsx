@@ -1,16 +1,21 @@
 'use client'
 
 import { Button, Card, CardBody, CardFooter, CardHeader, Flex, Heading, Input, useBoolean } from "@chakra-ui/react"
-import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { ChangeEvent, useState } from "react"
 
 export default function Auth() {
-  const [nextPage, setNextPage] = useBoolean(false)
+  const [loading, setLoading] = useBoolean(false)
   const [username, setUsername] = useState<string>('')
+  const router = useRouter()
 
   function handleSetUsername(event: ChangeEvent<HTMLInputElement>) {
-    const value: string = event.target.value
-    setUsername(value.trim())
+    setUsername(event.target.value.trim())
+  }
+
+  async function handleNextPage() {
+    router.push(`/${username}?timestamp=${new Date().getTime()}`)
+    setLoading.on()
   }
 
   return (
@@ -19,12 +24,15 @@ export default function Auth() {
       align='center'
       justify='center'
     >
-      <Card minW={{sm: 'md', base: 'auto'}}>
+      <Card 
+        mx='4'
+        w={{xl: 'md', base: 'md'}}
+      >
         <CardHeader>
           <Heading
             size='sm'
             fontFamily='Quicksand'
-            color='app.black.2'
+            color='app.black.1'
           >
             Đăng nhập / Đăng kí
           </Heading>
@@ -35,19 +43,15 @@ export default function Auth() {
             size='lg'
             variant='black'
             placeholder='Tên đăng nhập'
-            onChange={e => handleSetUsername(e)}  
+            onChange={e => handleSetUsername(e)}
           />
         </CardBody>
         <CardFooter justify='right'>
           <Button
-            isLoading={nextPage}
-            variant='out'
-            as={Link}
-            href={{
-              pathname: `/${username}`,
-              query: {timestamp: new Date().getTime()}
-            }}
-            onClick={() => username ? setNextPage.on() : setNextPage.off()}
+            isDisabled={!Boolean(username)}
+            isLoading={loading}
+            variant='unBl'
+            onClick={handleNextPage}
           >
             Tiếp theo
           </Button>
